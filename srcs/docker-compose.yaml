@@ -5,7 +5,7 @@ services:
   mariadb:
     container_name: mariadb  # match the service name
     build: ./requirements/mariadb
-    image: maridb  # match the service name
+    image: mariadb  # match the service name
     pull_policy: never # Forbidden to pull ready-made images
     restart: always    # Restart automatically on crash
     env_file: .env     # Use variables from .env
@@ -46,22 +46,22 @@ services:
     depends_on:
       - wordpress # wait for wordpress to start
 
-  # NETWORKS
-  networks:
-    inception:
-      driver: bridge
+# NETWORKS
+networks:
+  inception:
+    driver: bridge
 
-  # VOLUMES
-  volumes:
-    db-data:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: /home/nchok/data/mariadb # VM Mode
-    wp-data:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: /home/nchok/data/mariadb # VM Mode
+# VOLUMES
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/nchok/data/mariadb # VM Mode
+  wp-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/nchok/data/mariadb # VM Mode
