@@ -2,7 +2,6 @@ NAME = inception
 
 DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yaml
 
-
 all: create_folder build start
 
 # ! CREATE FOLDER (HOST MODE)
