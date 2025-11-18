@@ -11,7 +11,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 
 # Configure PHP-FPM to listen on port 9000 (Required!)
 # We verify the file location on Bullseye is /etc/php/7.4/fpm/pool.d/www.conf
-RUN sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 9000|g' /etc/php/7.4/fpm/pool.d/www.conf
+RUN sed -i 's|listen = /run/php/php-7.4-fpm.sock|listen = 9000|g' /etc/php/7.4/fpm/pool.d/www.conf
 
 # Create the folder for the socket (even if we use port, php-fpm needs the run folder)
 RUN mkdir -p /run/php
