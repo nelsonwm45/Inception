@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # SERVICE 1: MariaDB (database)
   mariadb:
