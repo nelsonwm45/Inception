@@ -25,6 +25,10 @@ create_folder:
 build:
 	@docker compose -f $(DOCKER_COMPOSE_FILE) build
 
+
+force-build:
+	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d --build --force-recreate nginx
+
 # ! START RUNNING CONTAINERS
 # up: This subcommand creates and starts the containers defined in your compose file.
 # -d: This stands for Detached mode. It runs the containers in the background. 
