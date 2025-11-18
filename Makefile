@@ -1,3 +1,8 @@
+NAME = inception
+
+DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yaml
+
+
 all: create_folder build start
 
 # ! CREATE FOLDER (HOST MODE)
@@ -18,7 +23,7 @@ create_folder:
 #						since subject requires file to be in srcs, this flag is MANDATORY
 # build: a subcommand to reads "yaml file" and build the images in the sections of services (MariaDB, WordPress, NGINX)
 build:
-	@docker compose -f ./srcs/docker-compose.yaml build
+	@docker compose -f $(DOCKER_COMPOSE_FILE) build
 
 # ! START RUNNING CONTAINERS
 # up: This subcommand creates and starts the containers defined in your compose file.
@@ -26,21 +31,21 @@ build:
 #		Without this, your terminal would be stuck displaying the logs of the containers, 
 #		and closing the terminal would kill the containers.
 start:
-	@docker compose -f ./srcs/docker-compose.yaml up -d
+	@docker compose -f $(DOCKER_COMPOSE_FILE) up -d
 
 # ! STOP RUNNING CONTAINER (NO CONTAINER REMOVAL)
 # stop: This stops the running containers without removing them. 
 # 		The data in the container's writable layer is preserved, 
 #		and the containers can be started again later.
 stop:
-	@docker compose -f ./srcs/docker-compose.yaml stop
+	@docker compose -f $(DOCKER_COMPOSE_FILE) stop
 
 # ! SHUT DOWN CONTAINER AND REMOVE THEM
 # down: This stops the containers and removes them.
 #		It also removes the internal network created by Docker Compose. 
 #		It does not remove volumes by default (so your database data stays safe).
 down:
-	@docker compose -f ./srcs/docker-compose.yaml down
+	@docker compose -f $(DOCKER_COMPOSE_FILE) down
 
 # ! VIEWING LOGS
 # logs: fetches the output (logs) from the containers.
@@ -48,7 +53,7 @@ down:
 #		so you see new log messages in real-time as they happen (similar to tail -f). 
 #		Press Ctrl+C to exit this view
 logs:
-	@docker compose -f ./srcs/docker-compose.yaml logs -f
+	@docker compose -f $(DOCKER_COMPOSE_FILE) logs -f
 
 # ! CLEANING IN HOST
 # Cleaning Scope: Projects Only
@@ -56,7 +61,7 @@ logs:
 #		and volumes belong to this specific project.
 # - It will not touch other Docker containers or images you might have on your compute
 clean:
-	@docker-compose -f ./srcs/docker-compose.yaml down --rmi all -v
+	@docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi all -v
 
 # ! CLEANING IN VM
 # Cleaning Scope: The entire machine
