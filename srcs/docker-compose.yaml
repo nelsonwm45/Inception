@@ -3,7 +3,7 @@ services:
   mariadb:
     container_name: mariadb  # match the service name
     build: ./requirements/mariadb
-    image: mariadb  # match the service name
+    image: inception-mariadb  # match the service name
     pull_policy: never # Forbidden to pull ready-made images
     restart: always    # Restart automatically on crash
     env_file: .env     # Use variables from .env
@@ -16,7 +16,7 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    image: wordpress
+    image: inception-wordpress
     pull_policy: never
     restart: always
     env_file: .env
@@ -31,7 +31,7 @@ services:
   nginx:
     container_name: nginx
     build: ./requirements/nginx
-    image: nginx
+    image: inception-nginx
     pull_policy: never
     restart: always
     env_file: .env
