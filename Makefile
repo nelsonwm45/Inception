@@ -64,7 +64,7 @@ logs:
 #		and volumes belong to this specific project.
 # - It will not touch other Docker containers or images you might have on your compute
 clean:
-	@docker-compose -f $(DOCKER_COMPOSE_FILE) down --rmi all -v
+	@docker compose -f $(DOCKER_COMPOSE_FILE) down --rmi all -v
 
 # ! CLEANING IN VM
 # Cleaning Scope: The entire machine
