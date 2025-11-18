@@ -8,7 +8,7 @@ RUN apt-get update -y && apt-get upgrade -y \
 
 # Create directories for permissions
 RUN mkdir -p /var/run/mysqld \
-	&& chown -R mysqld:mysqld /var/run/mysqld \
+	&& chown -R mysql:mysql /var/run/mysqld \
 	&& chmod 777 /var/run/mysqld
 
 
