@@ -1,4 +1,4 @@
-FROM debian:bulleyes
+FROM debian:bullseye
 
 # Update and install PHP extensions required by WordPress
 RUN	apt-get update -y && apt-get upgrade -y \
