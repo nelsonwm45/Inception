@@ -24,7 +24,7 @@ RUN mkdir -p /etc/nginx/ssl /var/www/html
 RUN openssl req -x509 -sha256 -days 365 -nodes \
 	-out /etc/nginx/ssl/nchok.crt \
 	-keyout /etc/nginx/ssl/nchok.key \
-	-subj "/C=MY/ST=SELANGOR/L=PETALINGJAYA/O=42KL/OU=nchok/CN=nchok/UID=nchok"
+	-subj "/C=MY/ST=SELANGOR/L=PETALINGJAYA/O=42KL/OU=nchok/CN=nchok.42.fr/UID=nchok"
 
 # Copy config
 COPY conf/nginx.conf /etc/nginx/nginx.conf
