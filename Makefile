@@ -1,5 +1,12 @@
 all: create_folder build start
 
+# ! CREATE FOLDER (HOST MODE)
+# create folders required by subject
+# create_folder:
+# 	mkdir -p ./data/mariadb
+# 	mkdir -p ./data/wordpress
+
+# ! CREATE FOLDER (VM MODE)
 # create folders required by subject
 create_folder:
 	mkdir -p /home/nchok/data/mariadb
@@ -78,5 +85,6 @@ fclean: prune
 	@rm -rf /home/login/data/mariadb/*
 	@rm -rf /home/login/data/wordpress/*
 
+re: clean all
 
 .PHONY: all build start stop down logs clean prune fclean re

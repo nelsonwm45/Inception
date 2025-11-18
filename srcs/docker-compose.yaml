@@ -58,10 +58,10 @@ services:
       driver_opts:
         type: none
         o: bind
-        device: /home/nchok/data/mariadb # PDF explicitly states that I must replace login to username
+        device: /home/nchok/data/mariadb # VM Mode
     wp-data:
       driver: local
       driver_opts:
         type: none
         o: bind
-        device: /home/nchok/data/mariadb
+        device: /home/nchok/data/mariadb # VM Mode
