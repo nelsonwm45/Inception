@@ -16,25 +16,22 @@ RUN apt-get update \
 #  - /var/www/html   : document root where the WordPress volume will be mounted
 RUN mkdir -p /etc/nginx/ssl /var/www/html
 
-# Copy NGINX configuration files:
-#  - /etc/nginx/nginx.conf    : global NGINX config (worker_processes, includes, etc.)
-#  - /etc/nginx/conf.d/default.conf : server block that:
-#       * listens on 443 with ssl http2;
-#       * uses ONLY TLSv1.2 and TLSv1.3, per subject;
-#       * forwards traffic to the WordPress php-fpm container (fastcgi_pass / proxy_pass).
+# Generate self-signed certificate (TLS)
+# req -x509: self signed
+# -nodes: no password for key
+# -out / -keyout: where to save
+# -subj: fills in the certificate info automatically
+RUN openssl req -x509 -sha256 -days 365 -nodes \
+	-out /etc/nginx/ssl/nchok.crt \
+	-keyout /etc/nginx/ssl/nchok.key \
+	-subj "/C=MY/ST=SELANGOR/L=PETALINGJAYA/O=42KL/OU=nchok/CN=nchok/UID=nchok
+
+# Copy config
 COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY conf/default.conf /etc/nginx/conf.d/default.conf
 
-# Copy TLS certificate and private key that NGINX uses for HTTPS on port 443.
-# (In a “real” setup you might generate them at runtime, but static files are fine here.)
-COPY conf/ssl/server.crt /etc/nginx/ssl/server.crt
-COPY conf/ssl/server.key /etc/nginx/ssl/server.key
-
-# Set strict permissions on the private key (only root/NGINX master can read it),
-# and standard read permissions on the certificate. This is good security hygiene,
-# even though the subject doesn't explicitly test it.
-RUN chmod 600 /etc/nginx/ssl/server.key \
-	&& chmod 644 /etc/nginx/ssl/server.crt
+# Set permissions
+RUN chmod 755 /var/www/html
+RUN chown -R www-data:www-data /var/www/html
 
 # Declare that this container exposes only HTTPS (port 443).
 # The subject explicitly checks "NGINX can be accessed by port 443 only".

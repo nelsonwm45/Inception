@@ -1,0 +1,67 @@
+version: "3"
+
+services:
+  # SERVICE 1: MariaDB (database)
+  mariadb:
+    container_name: mariadb  # match the service name
+    build: ./requirements/mariadb
+    image: maridb  # match the service name
+    pull_policy: never # Forbidden to pull ready-made images
+    restart: always    # Restart automatically on crash
+    env_file: .env     # Use variables from .env
+    networks:
+      - inception      # Connect to custom network
+    volumes:
+      - db-data:/var/lib/mysql
+    
+  # SERVICE 2: WordPress
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress
+    image: wordpress
+    pull_policy: never
+    restart: always
+    env_file: .env
+    networks:
+      - inception
+    volumes:
+      - wp-data:/var/www/html # Persists of website file
+    depends_on:
+      - mariadb # Wait for DB to start
+  
+  # SERVICE 3: NGINX
+  nginx:
+    container_name: nginx
+    build: ./requirements/nginx
+    image: nginx
+    pull_policy: never
+    restart: always
+    env_file: .env
+    ports:
+      - "443:443" # Only port 443 allowed
+    networks:
+      - inception
+    volumes:
+      - wp-data:/var/www/html # need access to WP files volumes to serve them
+    depends_on:
+      - wordpress # wait for wordpress to start
+
+  # NETWORKS
+  networks:
+    inception:
+      driver: bridge
+
+  # VOLUMES
+  volumes:
+    db-data:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: /home/nchok/data/mariadb # PDF explicitly states that I must replace login to username
+    wp-data:
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: /home/nchok/data/mariadb
