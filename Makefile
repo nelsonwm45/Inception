@@ -99,6 +99,11 @@ clean_folders:
 	@sudo rm -rf /home/$(LOGIN)/data/mariadb/*
 	@sudo rm -rf /home/$(LOGIN)/data/wordpress/*
 
+list_wp_mariadb:
+	@ls -la /home/$(LOGIN)/data/mariadb/
+	@ls -la /home/$(LOGIN)/data/wordpress/
+
+
 re: clean all
 
 .PHONY: all build start stop down logs clean prune fclean re
