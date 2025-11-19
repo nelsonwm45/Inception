@@ -44,7 +44,10 @@ services:
     depends_on:
       - wordpress # wait for wordpress to start
 
-# NETWORKS
+# NETWORKS : 
+# instead of using default docker network, 
+# defining own to cover 3 services, 
+# enabling containers to talk to each other
 networks:
   inception:
     driver: bridge
@@ -56,10 +59,10 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/nchok/data/mariadb # VM Mode
+      device: /home/nchok/data/mariadb # Requires a volume to contain database. w/o this data vanish everytime after restart container
   wp-data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/nchok/data/wordpress # VM Mode
+      device: /home/nchok/data/wordpress # Requires a volume to contain database. w/o this data vanish everytime after restart container
