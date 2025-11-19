@@ -2,6 +2,8 @@ NAME = inception
 
 DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yaml
 
+LOGIN=nchok
+
 all: build start
 
 # ! CREATE FOLDER (HOST MODE)
@@ -90,12 +92,12 @@ prune:
 
 # Dangerous: Deletes all data
 fclean: prune
-	@sudo rm -rf /home/login/data/mariadb/*
-	@sudo rm -rf /home/login/data/wordpress/*
+	@sudo rm -rf /home/$(LOGIN)/data/mariadb/*
+	@sudo rm -rf /home/$(LOGIN)/data/wordpress/*
 
 clean_folders:
-	@sudo rm -rf /home/login/data/mariadb/*
-	@sudo rm -rf /home/login/data/wordpress/*
+	@sudo rm -rf /home/$(LOGIN)/data/mariadb/*
+	@sudo rm -rf /home/$(LOGIN)/data/wordpress/*
 
 re: clean all
 
