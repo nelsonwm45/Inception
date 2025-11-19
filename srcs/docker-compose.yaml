@@ -1,68 +1,120 @@
 services:
-  # SERVICE 1: MariaDB (database)
+  # ==============================================================================================
+  # SERVICE 1: MariaDB (Database)
+  # ==============================================================================================
   mariadb:
-    container_name: mariadb  # match the service name
+    # Explicitly naming the container makes it easier to debug and inspect (e.g., 'docker logs mariadb').
+    container_name: mariadb
+    
+    # 'build' tells Docker to locate the Dockerfile in the specified path (./requirements/mariadb) and build it.
     build: ./requirements/mariadb
-    image: inception-mariadb  # match the service name
-    pull_policy: never # Forbidden to pull ready-made images
-    restart: always    # Restart automatically on crash
-    env_file: .env     # Use variables from .env
+
+    # This tags the built image as 'mariadb'. Same name as service
+    image: mariadb
+
+    # Ensures Docker never attempts to download an image from DockerHub if the build fails or is missing.
+    # This guarantees you strictly follow the "forbidden to pull ready-made images" rule.
+    pull_policy: never
+
+    # 'always': If the container stops (crash or manual stop), Docker automatically restarts it.
+    restart: always
+
+    # Loads variables (MYSQL_USER, MYSQL_PASSWORD, etc.) from the .env file into the container.
+    env_file: .env
+
+    # Connects this service to the 'inception' network defined at the bottom.
     networks:
-      - inception      # Connect to custom network
+      - inception
+
+    # Maps the internal MariaDB data folder (/var/lib/mysql) to the named volume 'db-data'.
+    # This ensures data persists even if the container is deleted.
     volumes:
       - db-data:/var/lib/mysql
-    
+
+  # ==============================================================================================
   # SERVICE 2: WordPress
+  # ==============================================================================================
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
-    image: inception-wordpress
+    image: wordpress
     pull_policy: never
     restart: always
     env_file: .env
     networks:
       - inception
+    
+    # Maps the internal web root (/var/www/html) to the 'wp-data' volume.
+    # This allows NGINX (in a different container) to access these same PHP files to serve them.
     volumes:
-      - wp-data:/var/www/html # Persists of website file
+      - wp-data:/var/www/html
+
+    # [NEEDED FOR STABILITY]
+    # WordPress needs the database to be ready before it can install itself.
+    # 'depends_on' ensures the 'mariadb' container is started before this 'wordpress' container starts.
+    # Note: It does not wait for the DB to be *ready* (connection-wise), just *started*. 
+    # (That is why you have a 'sleep 10' in your wp-setup.sh).
     depends_on:
-      - mariadb # Wait for DB to start
-  
+      - mariadb
+
+  # ==============================================================================================
   # SERVICE 3: NGINX
+  # ==============================================================================================
   nginx:
     container_name: nginx
     build: ./requirements/nginx
-    image: inception-nginx
+    image: nginx
     pull_policy: never
     restart: always
     env_file: .env
+
+    # Requirement: "Your NGINX container must be the sole entry point... accessible only via port 443"
+    # Maps Host Port 443 -> Container Port 443.
+    # We DO NOT map port 80 or 3306 or 9000 to the host, ensuring strict security compliance.
     ports:
-      - "443:443" # Only port 443 allowed
+      - "443:443"
+
     networks:
       - inception
-    volumes:
-      - wp-data:/var/www/html # need access to WP files volumes to serve them
-    depends_on:
-      - wordpress # wait for wordpress to start
 
-# NETWORKS : 
-# instead of using default docker network, 
-# defining own to cover 3 services, 
-# enabling containers to talk to each other
+    # [NEEDED FOR ARCHITECTURE]
+    # NGINX needs access to the WordPress PHP files to serve static content and pass PHP requests to the WP container.
+    # By mounting the SAME volume 'wp-data', NGINX sees the exact same files as the WordPress container.
+    volumes:
+      - wp-data:/var/www/html
+
+    # [NEEDED FOR STABILITY]
+    # NGINX acts as a reverse proxy for WordPress. If WP isn't running, NGINX will error out on requests.
+    depends_on:
+      - wordpress
+
+# ==============================================================================================
+# NETWORKS
+# ==============================================================================================
 networks:
   inception:
+    # 'driver: bridge' creates an isolated network on the host.
+    # Containers on this network can communicate by using their service names (e.g., 'wordpress' can ping 'mariadb').
     driver: bridge
 
+# ==============================================================================================
 # VOLUMES
+# ==============================================================================================
 volumes:
   db-data:
+    # 'driver: local' uses the default Docker volume driver.
+    # The volume data is stored locally on the host machine's filesystem
     driver: local
+    # We use 'driver_opts' to perform a Bind Mount.
+    # This forces Docker to store the volume data in a specific path on your host machine (VM).
     driver_opts:
-      type: none
-      o: bind
-      device: /home/nchok/data/mariadb # Requires a volume to contain database. w/o this data vanish everytime after restart container
+      type: none   # No specific driver type (standard mount)
+      o: bind      # Option 'bind': directly links a host directory to the container volume
+      device: /home/nchok/data/mariadb # The specific folder on your Host VM mandated by the subject.
+
   wp-data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/nchok/data/wordpress # Requires a volume to contain database. w/o this data vanish everytime after restart container
+      device: /home/nchok/data/wordpress # The specific folder on your Host VM mandated by the subject.
