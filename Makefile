@@ -93,6 +93,10 @@ fclean: prune
 	@sudo rm -rf /home/login/data/mariadb/*
 	@sudo rm -rf /home/login/data/wordpress/*
 
+clean_folders:
+	@sudo rm -rf /home/login/data/mariadb/*
+	@sudo rm -rf /home/login/data/wordpress/*
+
 re: clean all
 
 .PHONY: all build start stop down logs clean prune fclean re
