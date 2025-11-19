@@ -8,7 +8,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	/usr/bin/mysqld_safe --datadir=/var/lib/mysql &
 
 	# Wait it to start
-	sleep 10
+	sleep 15
 
 	# Create Database and User Securely using env variables
 	mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};"
