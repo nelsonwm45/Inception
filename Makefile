@@ -2,7 +2,7 @@ NAME = inception
 
 DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yaml
 
-all: create_folder build start
+all: build start
 
 # ! CREATE FOLDER (HOST MODE)
 # create folders required by subject
@@ -21,7 +21,7 @@ create_folder:
 #						without this flag, docker will look for "docker-compose.yaml"
 #						since subject requires file to be in srcs, this flag is MANDATORY
 # build: a subcommand to reads "yaml file" and build the images in the sections of services (MariaDB, WordPress, NGINX)
-build:
+build: create_folder
 	@docker compose -f $(DOCKER_COMPOSE_FILE) build
 
 
