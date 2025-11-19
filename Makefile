@@ -90,8 +90,8 @@ prune:
 
 # Dangerous: Deletes all data
 fclean: prune
-	@rm -rf /home/login/data/mariadb/*
-	@rm -rf /home/login/data/wordpress/*
+	@sudo rm -rf /home/login/data/mariadb/*
+	@sudo rm -rf /home/login/data/wordpress/*
 
 re: clean all
 
