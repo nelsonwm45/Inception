@@ -2,9 +2,11 @@
 FROM debian:bullseye
 
 # Update and Install MariaDB && clean APT cache to keep final image smaller
+# clean the default database so our script can create a fresh one with the correct users.
 RUN apt-get update -y && apt-get upgrade -y \
 	&& apt-get install -y mariadb-server \
-	&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /var/lib/mysql/*
 
 # Create directories for permissions
 RUN mkdir -p /var/run/mysqld \
