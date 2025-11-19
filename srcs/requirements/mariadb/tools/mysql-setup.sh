@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Install the database if it doesn't exist
-if [! -d "/var/lib/mysql/mysql" ]; then
-	mysql_install_db --user=mysql --datadir=/var
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 	# Start MariaDB temporarily to set up users
 	/usr/bin/mysqld_safe --datadir=/var/lib/mysql &

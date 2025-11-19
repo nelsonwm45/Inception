@@ -3,7 +3,7 @@
 # Wait for mariadb to be ready
 sleep 10
 
-if [ ! -f /var/www/html/wp-config.php]; then
+if [ ! -f /var/www/html/wp-config.php ]; then
 	# Download WordPress
 	wp core download --allow-root
 
