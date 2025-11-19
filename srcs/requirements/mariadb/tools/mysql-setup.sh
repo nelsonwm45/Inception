@@ -1,7 +1,13 @@
 #!/bin/sh
 
+echo "DEBUG: Script is running!"
+echo "DEBUG: Listing contents of /var/lib/mysql:"
+ls -la /var/lib/mysql
+echo "DEBUG: Checking if directory /var/lib/mysql/mysql exists..."
+
 # Install the database if it doesn't exist
 if [ ! -d "/var/lib/mysql/mysql" ]; then
+	echo "DEBUG: Directory NOT found. Starting installation..."
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 	# Start MariaDB temporarily to set up users
@@ -20,6 +26,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';"
 	mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
 else
+	echo "DEBUG: Directory FOUND. Skipping installation."
 	echo "DATABASE WAS ALREADY CREATED!"
 fi
 
