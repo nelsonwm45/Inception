@@ -16,9 +16,9 @@ RUN apt-get update \
 #  - /var/www/html   : document root where the WordPress volume will be mounted
 RUN mkdir -p /etc/nginx/ssl /var/www/html
 
-# Generate self-signed certificate (TLS)
+# Generate self-signed certificate (TLS), since cannot buy a commercial certificate
 # req -x509: self signed
-# -nodes: no password for key
+# -nodes: no password for key. Otherwise NGINX will ask for password everytime container restart.
 # -out / -keyout: where to save
 # -subj: fills in the certificate info automatically
 RUN openssl req -x509 -sha256 -days 365 -nodes \
