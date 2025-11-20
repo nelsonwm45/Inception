@@ -1,6 +1,6 @@
 NAME = inception
 
-DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yaml
+DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yml
 
 LOGIN=nchok
 
