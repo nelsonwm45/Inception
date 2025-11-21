@@ -1,7 +1,14 @@
 #!/bin/bash
 
 # Wait for mariadb to be ready
-sleep 10
+# Loop until MariaDB is reachable
+# try to connect, discard output, if fail (||) print message and sleep
+until mysqladmin -hmariadb -u${MYSQL_USER} -p${MYSQL_PASSWORD} ping; do
+    echo "MariaDB is not ready... sleeping..."
+    sleep 2
+done
+
+echo "MariaDB is ready!"
 
 if [ ! -f /var/www/html/wp-config.php ]; then
 	# Download WordPress
